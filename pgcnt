@@ -1,0 +1,78 @@
+#!/bin/sh
+
+SOURCE_TEX="thesis.tex"
+# SOURCE_DIR=$(cd $(dirname $0); pwd)
+VARBOSE_FLAG=0
+
+function spin {
+	local pid=$1
+	local delay=0.1
+	sp="/-\|"
+	i=1
+	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+			sleep $delay
+			char="${sp:i++%${#sp}:1}"
+			printf " [%s]\r" ${char}
+	done
+}
+
+function usage {
+  cat <<EOM
+Usage: $(basename "$0") [OPTION] [SOURCE DIRECTORY]...
+  -h        Display help
+  -f VALUE  Name of latex source file (Default: ${SOURCE_TEX})
+  -v        Display latexmk log
+EOM
+  exit 2
+}
+
+while getopts ":f:hv" OPT; do
+  case $OPT in
+		f)  SOURCE_TEX=$OPTARG
+      ;;
+    v)  VARBOSE_FLAG=1
+			;;
+    h)  usage
+      ;;
+    \?) usage
+    	;;
+  esac
+done
+
+shift `expr $OPTIND - 1`
+if [ $# -ne 1 ]; then
+	usage
+fi
+
+SOURCE_DIR=$1
+TMPDIR=$(mktemp -d $SOURCE_DIR/tmp.XXXXXX)
+TMPTEX=$(mktemp $SOURCE_DIR/tmp-XXXXXX)
+mv $TMPTEX $TMPTEX.tex
+TMPTEX=$TMPTEX.tex
+
+cat <<EOF > $TMPTEX
+\documentclass[master,english]{kuisthesis}
+\usepackage{comment}
+\excludecomment{figure}
+\let\endfigure\relax
+\excludecomment{table}
+\let\endtable\relax
+\excludecomment{jabstract}
+\let\endjabstract\relax
+\excludecomment{eabstract}
+\let\endeabstract\relax
+EOF
+cat $SOURCE_DIR/$SOURCE_TEX | sed 's|\\maketitle||g' | sed 's|\\tableofcontents||g' >> $TMPTEX
+
+if [ $VARBOSE_FLAG = 1 ]; then
+	latexmk -pdfdvi -f $TMPTEX -outdir=$TMPDIR
+else
+	latexmk -pdfdvi -f $TMPTEX -outdir=$TMPDIR > /dev/null 2>&1 & spin $!
+fi
+
+PDF=$(find $TMPDIR -regex '.*pdf$')
+pdfinfo $PDF | grep Pages | awk '{print "Page count: " $2}'
+
+mkdir -p $SOURCE_DIR/out
+cp $PDF $SOURCE_DIR/out/pagecount.pdf
+rm -rf $TMPDIR $TMPTEX
