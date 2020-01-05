@@ -9,9 +9,9 @@ function spin {
 	sp="/-\|"
 	i=1
 	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-			sleep $delay
-			char="${sp:i++%${#sp}:1}"
-			printf " [%s]\r" ${char}
+		sleep $delay
+		char="${sp:i++%${#sp}:1}"
+		printf " [%s]\r" ${char}
 	done
 }
 
@@ -27,14 +27,14 @@ EOM
 
 while getopts ":f:hv" OPT; do
   case $OPT in
-		f)  SOURCE_TEX=$OPTARG
-      ;;
-    v)  VARBOSE_FLAG=1
-			;;
-    h)  usage
-      ;;
-    \?) usage
-    	;;
+	f)  SOURCE_TEX=$OPTARG
+		;;
+	v)  VARBOSE_FLAG=1
+		;;
+	h)  usage
+		;;
+	\?) usage
+		;;
   esac
 done
 
