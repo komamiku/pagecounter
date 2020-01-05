@@ -49,8 +49,9 @@ if [ ! -e $SOURCE_DIR/$SOURCE_TEX ]; then
 	usage
 fi
 
-TMPDIR=$(mktemp -d $SOURCE_DIR/tmp.XXXXXX)
-TMPTEX=$(mktemp $SOURCE_DIR/tmp-XXXXXX)
+cd $SOURCE_DIR
+TMPDIR=$(mktemp -d tmp.XXXXXX)
+TMPTEX=$(mktemp tmp-XXXXXX)
 mv $TMPTEX $TMPTEX.tex
 TMPTEX=$TMPTEX.tex
 
@@ -66,7 +67,7 @@ cat <<EOF > $TMPTEX
 \excludecomment{eabstract}
 \let\endeabstract\relax
 EOF
-cat $SOURCE_DIR/$SOURCE_TEX | sed 's|\\maketitle||g' | sed 's|\\tableofcontents||g' >> $TMPTEX
+cat $SOURCE_TEX | sed 's|\\maketitle||g' | sed 's|\\tableofcontents||g' >> $TMPTEX
 
 if [ $VARBOSE_FLAG = 1 ]; then
 	latexmk -pdfdvi -f $TMPTEX -outdir=$TMPDIR
@@ -77,6 +78,6 @@ fi
 PDF=$(find $TMPDIR -regex '.*pdf$')
 pdfinfo $PDF | grep Pages | awk '{print "Page count: " $2}'
 
-mkdir -p $SOURCE_DIR/out
-cp $PDF $SOURCE_DIR/out/pagecount.pdf
+mkdir -p out
+cp $PDF out/pagecount.pdf
 rm -rf $TMPDIR $TMPTEX
