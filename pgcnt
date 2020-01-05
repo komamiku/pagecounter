@@ -1,7 +1,6 @@
 #!/bin/sh
 
 SOURCE_TEX="thesis.tex"
-# SOURCE_DIR=$(cd $(dirname $0); pwd)
 VARBOSE_FLAG=0
 
 function spin {
@@ -45,6 +44,11 @@ if [ $# -ne 1 ]; then
 fi
 
 SOURCE_DIR=$1
+if [ ! -e $SOURCE_DIR/$SOURCE_TEX ]; then
+	echo $SOURCE_DIR/$SOURCE_TEX" does no exist."
+	usage
+fi
+
 TMPDIR=$(mktemp -d $SOURCE_DIR/tmp.XXXXXX)
 TMPTEX=$(mktemp $SOURCE_DIR/tmp-XXXXXX)
 mv $TMPTEX $TMPTEX.tex
