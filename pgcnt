@@ -75,9 +75,9 @@ else
 	latexmk -pdfdvi -f $TMPTEX -outdir=$TMPDIR > /dev/null 2>&1 & spin $!
 fi
 
-PDF=$(find $TMPDIR -regex '.*pdf$')
-pdfinfo $PDF | grep Pages | awk '{print "Page count: " $2}'
+PDF=$(ls $TMPDIR | grep '.*pdf$')
+pdfinfo $TMPDIR/$PDF | grep Pages | awk '{print "Page count: " $2}'
 
 mkdir -p out
-cp $PDF out/pagecount.pdf
+cp $TMPDIR/$PDF out/pagecount.pdf
 rm -rf $TMPDIR $TMPTEX
