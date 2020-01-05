@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 SOURCE_TEX="thesis.tex"
 VARBOSE_FLAG=0
