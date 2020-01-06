@@ -11,8 +11,9 @@ function spin {
 	while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
 		sleep $delay
 		char="${sp:i++%${#sp}:1}"
-		printf " [%s]\r" ${char}
+		printf "Now compiling...%s\r" ${char}
 	done
+	printf "                  \r"
 }
 
 function usage {
