@@ -45,7 +45,7 @@ fi
 
 SOURCE_DIR=$1
 if [ ! -e $SOURCE_DIR/$SOURCE_TEX ]; then
-	echo $SOURCE_DIR/$SOURCE_TEX" does no exist."
+	echo $SOURCE_DIR/$SOURCE_TEX" does not exist."
 	usage
 fi
 
@@ -55,8 +55,9 @@ TMPTEX=$(mktemp tmp-XXXXXX)
 mv $TMPTEX $TMPTEX.tex
 TMPTEX=$TMPTEX.tex
 
+DOCUMENT_CLASS=$(grep documentclass $SOURCE_TEX)
 cat <<EOF > $TMPTEX
-\documentclass[master,english]{kuisthesis}
+${DOCUMENT_CLASS}
 \usepackage{comment}
 \excludecomment{figure}
 \let\endfigure\relax
