@@ -4,6 +4,7 @@ SOURCE_TEX="thesis.tex"
 VARBOSE_FLAG=0
 
 function spin {
+    tput civis
 	local pid=$1
 	local delay=0.1
 	sp="/-\|"
@@ -14,6 +15,7 @@ function spin {
 		printf "Now compiling...%s\r" ${char}
 	done
 	printf "                  \r"
+    tput cnorm
 }
 
 function usage {
