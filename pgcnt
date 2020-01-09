@@ -23,16 +23,18 @@ function usage {
   cat <<EOM
 Usage: $(basename "$0") [OPTION] [SOURCE DIRECTORY]...
   -h        Display help
-  -b		Bachelor mode (Default: Master mode)
+  -b        Bachelor mode (Default: Master mode)
   -f VALUE  Name of latex source file (Default: ${SOURCE_TEX})
   -v        Display latexmk log
 EOM
   exit 2
 }
 
-while getopts ":f:hv" OPT; do
+while getopts ":f:bhv" OPT; do
   case $OPT in
 	f)  SOURCE_TEX=$OPTARG
+		;;
+	b)	BACHELOR_MODE=1
 		;;
 	v)  VARBOSE_FLAG=1
 		;;
