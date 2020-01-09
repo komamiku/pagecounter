@@ -5,7 +5,7 @@ VARBOSE_FLAG=0
 BACHELOR_MODE=0
 
 function spin {
-    tput civis
+	tput civis
 	local pid=$1
 	local delay=0.1
 	sp="/-\|"
@@ -16,25 +16,25 @@ function spin {
 		printf "Now compiling...%s\r" ${char}
 	done
 	printf "                  \r"
-    tput cnorm
+	tput cnorm
 }
 
 function usage {
-  cat <<EOM
+	cat <<EOM
 Usage: $(basename "$0") [OPTION] [SOURCE DIRECTORY]...
   -h        Display help
   -b        Bachelor mode (Default: Master mode)
   -f VALUE  Name of latex source file (Default: ${SOURCE_TEX})
   -v        Display latexmk log
 EOM
-  exit 2
+	exit 2
 }
 
 while getopts ":f:bhv" OPT; do
-  case $OPT in
+	case $OPT in
 	f)  SOURCE_TEX=$OPTARG
 		;;
-	b)	BACHELOR_MODE=1
+	b)  BACHELOR_MODE=1
 		;;
 	v)  VARBOSE_FLAG=1
 		;;
@@ -42,7 +42,7 @@ while getopts ":f:bhv" OPT; do
 		;;
 	\?) usage
 		;;
-  esac
+	esac
 done
 
 shift `expr $OPTIND - 1`
