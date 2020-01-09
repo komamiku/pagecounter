@@ -2,6 +2,7 @@
 
 SOURCE_TEX="thesis.tex"
 VARBOSE_FLAG=0
+BACHELOR_MODE=0
 
 function spin {
     tput civis
@@ -22,6 +23,7 @@ function usage {
   cat <<EOM
 Usage: $(basename "$0") [OPTION] [SOURCE DIRECTORY]...
   -h        Display help
+  -b		Bachelor mode (Default: Master mode)
   -f VALUE  Name of latex source file (Default: ${SOURCE_TEX})
   -v        Display latexmk log
 EOM
@@ -58,20 +60,11 @@ TMPTEX=$(mktemp tmp-XXXXXX)
 mv $TMPTEX $TMPTEX.tex
 TMPTEX=$TMPTEX.tex
 
-DOCUMENT_CLASS=$(grep documentclass $SOURCE_TEX)
-cat <<EOF > $TMPTEX
-${DOCUMENT_CLASS}
-\usepackage{comment}
-\excludecomment{figure}
-\let\endfigure\relax
-\excludecomment{table}
-\let\endtable\relax
-\excludecomment{jabstract}
-\let\endjabstract\relax
-\excludecomment{eabstract}
-\let\endeabstract\relax
-EOF
-cat $SOURCE_TEX | sed 's|\\maketitle||g' | sed 's|\\tableofcontents||g' >> $TMPTEX
+if [ $BACHELOR_MODE = 0 ]; then
+	sed -e "/\\begin{figure}/,/\\end{figure}/d" -e "/\\begin{table}/,/\\end{table}/d" -e "/\\begin{eabstract}/,/\\end{eabstract}/d" -e "/\\begin{jabstract}/,/\\end{jabstract}/d" -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
+else
+	sed -e "/\\begin{figure}/,/\\end{figure}/d" -e "/\\begin{table}/,/\\end{table}/d" -e "/\\begin{eabstract}/,/\\end{eabstract}/d" -e "/\\begin{acknowledgements}/,/\\end{acknowledgements}/d" -e "s|\\bibliography{.*}||g" -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
+fi
 
 if [ $VARBOSE_FLAG = 1 ]; then
 	latexmk -pdfdvi -f $TMPTEX -outdir=$TMPDIR
