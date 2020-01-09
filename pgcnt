@@ -61,9 +61,9 @@ mv $TMPTEX $TMPTEX.tex
 TMPTEX=$TMPTEX.tex
 
 if [ $BACHELOR_MODE = 0 ]; then
-	sed -e "/\\begin{figure}/,/\\end{figure}/d" -e "/\\begin{table}/,/\\end{table}/d" -e "/\\begin{eabstract}/,/\\end{eabstract}/d" -e "/\\begin{jabstract}/,/\\end{jabstract}/d" -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
+	sed -e '/\\begin{figure}/,/\\end{figure}/d' -e '/\\begin{table}/,/\\end{table}/d' -e '/\\begin{eabstract}/,/\\end{eabstract}/d' -e '/\\begin{jabstract}/,/\\end{jabstract}/d' -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
 else
-	sed -e "/\\begin{figure}/,/\\end{figure}/d" -e "/\\begin{table}/,/\\end{table}/d" -e "/\\begin{eabstract}/,/\\end{eabstract}/d" -e "/\\begin{acknowledgements}/,/\\end{acknowledgements}/d" -e "s|\\bibliography{.*}||g" -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
+	sed -e '/\\begin{figure}/,/\\end{figure}/d' -e '/\\begin{table}/,/\\end{table}/d' -e '/\\begin{eabstract}/,/\\end{eabstract}/d' -e '/\\begin{acknowledgements}/,/\\end{acknowledgements}/d' -e 's|\\bibliography{.*}||g' -e 's|\\maketitle||g' -e 's|\\tableofcontents||g' $SOURCE_TEX > $TMPTEX
 fi
 
 if [ $VARBOSE_FLAG = 1 ]; then
